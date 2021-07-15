@@ -10,6 +10,7 @@ html,
 body {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
 
 * {
@@ -20,20 +21,86 @@ body {
   font-family: "Spartan", sans-serif;
   width: 100vw;
   height: 100vh;
-  background-color: var(--background-color);
+  background-color: var(--background-color) no-repeat center;
   font-size: 15px;
 }
 header {
   width: 100%;
-  height: 100px;
-  background-image: url("../images/bg-header-desktop");
+  min-height: 100px;
+  background-image: url("./images/bg-header-desktop.svg");
+}
+
+.filterArea {
+  width: 80%;
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: -35px auto 60px auto;
+  background-color: white;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 4px 4px 4px 4px rgba(0, 0, 0, 0.1);
+}
+
+.filterArea #filters {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.filterArea #filters .filter {
+  display: flex;
+  align-items: center;
+  margin-right: 10px;
+  padding-left: 8px;
+  border-radius: 4px;
+  height: 24px;
+  width: min-content;
+  font-size: 11px;
+  background: var(--filter-table-color);
+  justify-content: space-between;
+  margin-top: 8px;
+}
+.filterArea #filters .filter p {
+  height: min-content;
+  margin: 0;
+  color: var(--primary-color);
+  font-weight: 700;
+}
+.filterArea #filters .filter button {
+  background-color: var(--primary-color);
+  border: none;
+  color: white;
+  font-weight: 700;
+  width: 24px;
+  height: 100%;
+  margin-left: 8px;
+  text-transform: uppercase;
+  border-radius: 0 4px 4px 0;
+  cursor: pointer;
+}
+
+.filterArea #filters .filter button:hover {
+  background-color: var(--very-dark-cyan);
+}
+
+.filterArea .clearFilters {
+  color: var(--dark-cyan);
+  background-color: white;
+  border: none;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.filterArea .clearFilters:hover {
+  color: var(--very-dark-cyan);
 }
 
 main {
   display: flex;
-
   flex-direction: column;
   align-items: center;
+  background-color: (var(--filter-table-color));
 }
 
 main .component-job:not(:first-child) {
@@ -174,6 +241,11 @@ main .component-job .job-tecnologys span {
 
 .pagination p {
   color: var(--primary-color);
+}
+
+.pagination p:hover {
+  color: var(--very-dark-cyan);
+  cursor: pointer;
 }
 
 .attribution {

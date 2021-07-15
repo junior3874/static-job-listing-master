@@ -1,0 +1,11 @@
+{
+  "name": "static-job-listings-master",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Julin ddd 011 <wellingtonjr53@outlook.com.br>",
+  "license": "MIT",
+  "scripts": {
+    "start": "npx http-server ./src"
+  }
+}
+  

@@ -8,12 +8,18 @@ const filterArea = document.querySelector(".filterArea");
 
 export default class View {
   static page = 1;
-  static async getJobs(command) {
-    const jobs = await command();
+  static setCommand(command) {
+    this.command = command;
+    return this;
+  }
+  static async setJobs() {
+    const jobs = await this.command();
 
     const jobsTemplate = jobComponent(jobs);
 
-    return View._insertJobsInMain(jobsTemplate);
+    View._insertJobsInMain(jobsTemplate);
+
+    View.addEventFromTecnologys();
   }
 
   static _insertJobsInMain(jobs) {
@@ -24,16 +30,14 @@ export default class View {
     main.innerHTML += jobs;
   }
 
-  static addEventFromBtnReadMore(command) {
-    btnReadMore.addEventListener("click", () =>
-      View._eventFromBtnReadMore(command)
-    );
+  static addEventFromBtnReadMore() {
+    btnReadMore.addEventListener("click", () => View._eventFromBtnReadMore());
   }
 
-  static async _eventFromBtnReadMore(command) {
+  static async _eventFromBtnReadMore() {
     this.page += 1;
 
-    const moreJobs = await command(this.page);
+    const moreJobs = await this.command(this.page);
     const jobsTemplate = jobComponent(moreJobs);
     View._insertMoreJobsInMain(jobsTemplate);
   }
@@ -48,45 +52,110 @@ export default class View {
     return element;
   }
 
-  static addEventFromTecnologys() {
-    const elements = View._getElementByClass(".tecnology");
-
-    elements.forEach((element) =>
-      element.addEventListener("click", (e) => View._eventFromBtnTecnologys(e))
-    );
-  }
-  static _eventFromBtnTecnologys(e) {
+  static _addFilter(e) {
     const tecnologyName = e.currentTarget.textContent;
 
     const element = View._getElementById(tecnologyName);
 
-    if (element) return;
+    if (element) throw new Error("element has exist");
     View._addTecnologyFromParameter(tecnologyName);
     View._addTecnologyFromFilterTable(tecnologyName);
   }
   static _addTecnologyFromFilterTable(tecnologyName) {
     const tecnologyTemplate = tecnologyComponent(tecnologyName);
-    if (filters.lastElementChild === null)
-      filterArea.classList.toggle("active");
+    if (filters.lastElementChild === null) filterArea.classList.add("active");
 
     filters.innerHTML += tecnologyTemplate;
+
+    // View.addEventFromBtnFilter(tecnologyName);
   }
 
   static _addTecnologyFromParameter(tecnologyName) {
     const url = new URL(location);
 
     const params = new URLSearchParams(url.search);
-    console.log(params.toString());
+    console.log(tecnologyName.replace(/\s/g, ""));
     params.has("tecnologys")
       ? params.set(
           "tecnologys",
-          `${params.getAll("tecnologys")},${tecnologyName}`
+          `${params.getAll("tecnologys")}&${tecnologyName.replace(/\s/g, "")}`
         )
-      : params.set("tecnologys", `${tecnologyName}`);
+      : params.set("tecnologys", tecnologyName.replace(/\s/g, ""));
 
-    window.history.replaceState({}, "", `${location.pathname}?${params}`);
+    window.history.replaceState({}, ",", `${location.pathname}?${params}`);
   }
 
-  static removeParemeters() {}
-  static _verifyParameters() {}
+  static setParametersUrlInFilterTable() {
+    const url = new URL(location);
+
+    const params = new URLSearchParams(url.search);
+
+    const [parameters] = params.getAll("tecnologys");
+    const newParameters = parameters?.split("&");
+
+    newParameters?.map((tecnologyName) => {
+      View._addTecnologyFromFilterTable(tecnologyName);
+    });
+  }
+  static _proxyRemoveAndAddFilter(addOrRemove, e) {
+    addOrRemove
+      ? (async () => {
+          try {
+            View._addFilter(e);
+            View.setJobs();
+          } catch (err) {
+            return;
+          }
+        })()
+      : (async () => {
+          View._removeFilter(e);
+          View.setJobs();
+        })();
+  }
+
+  static addEventFromFilterArea() {
+    filterArea.addEventListener("click", (e) => {
+      const element = e.target;
+      if (element.className == "clear-filter") {
+        View._proxyRemoveAndAddFilter(false, e);
+      } else {
+        return;
+      }
+    });
+  }
+
+  static addEventFromTecnologys() {
+    const elements = View._getElementByClass(".tecnology");
+
+    elements.forEach((element) => {
+      element.addEventListener("click", (e) =>
+        View._proxyRemoveAndAddFilter(true, e)
+      );
+    });
+  }
+
+  static _removeFilter(e) {
+    const url = new URL(location);
+
+    const params = new URLSearchParams(url.search);
+    if (params.has("tecnologys")) {
+      const tecnologys = params
+        .getAll("tecnologys")[0]
+        .split("&")
+        .filter(
+          (element) => e.target.parentElement.id.replace(/\s/g, "") != element
+        );
+
+      params.set("tecnologys", tecnologys.join("&"));
+      window.history.replaceState({}, ",", `${location.pathname}?${params}`);
+
+      filters.removeChild(e.target.parentElement);
+
+      if (filters.lastElementChild === null) {
+        params.delete("tecnologys");
+        window.history.replaceState({}, ",", `${location.pathname}?${params}`);
+        filterArea.classList.remove("active");
+      }
+    }
+  }
 }

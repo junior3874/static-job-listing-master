@@ -12,9 +12,13 @@ export default class Controller {
     this._setupViewEvents();
   }
 
-  _setupViewEvents() {
-    this.view.getJobs(this.getJobs());
-    this.view.addEventFromBtnReadMore(this.getJobs());
+  async _setupViewEvents() {
+    await this.view.setCommand(this.getJobs());
+    await this.view.setJobs(this.getJobs());
+
+    this.view.addEventFromBtnReadMore();
+    this.view.setParametersUrlInFilterTable();
+    this.view.addEventFromFilterArea();
   }
 
   getJobs() {

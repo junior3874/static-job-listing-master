@@ -33,7 +33,7 @@ header {
 .filterArea {
   width: 80%;
   min-height: 60px;
-  display: flex;
+  display: none;
   align-items: center;
   justify-content: space-between;
   margin: -35px auto 60px auto;
@@ -41,6 +41,9 @@ header {
   padding: 10px;
   border-radius: 8px;
   box-shadow: 4px 4px 4px 4px rgba(0, 0, 0, 0.1);
+}
+.filterArea.active {
+  display: flex;
 }
 
 .filterArea #filters {
@@ -67,7 +70,7 @@ header {
   color: var(--primary-color);
   font-weight: 700;
 }
-.filterArea #filters .filter button {
+.filterArea #filters .filter a {
   background-color: var(--primary-color);
   border: none;
   color: white;
@@ -78,9 +81,12 @@ header {
   text-transform: uppercase;
   border-radius: 0 4px 4px 0;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.filterArea #filters .filter button:hover {
+.filterArea #filters .filter a:hover {
   background-color: var(--very-dark-cyan);
 }
 

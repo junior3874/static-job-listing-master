@@ -122,6 +122,7 @@ main .component-job {
   padding: 10px;
   background-color: white;
   position: relative;
+  box-shadow: 3px 2px 3px 2px rgba(0, 0, 0, 0.1);
 }
 
 main .component-job.active {
@@ -258,4 +259,31 @@ main .component-job .job-tecnologys span {
   padding: 50px;
   width: 100%;
   text-align: center;
+}
+
+@media (min-width: 700px) {
+  main .component-job {
+    flex-direction: row;
+  }
+  
+  main .component-job .job-props .company-image{
+    margin: 0 20px 0 0;
+  }
+
+  main .component-job .job-props{
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    
+  }
+  
+  main .component-job .job-tecnologys{
+    align-items: center;
+    justify-content: flex-end;
+  }
+
+  main .component-job .job-props .job-details .job-especifications::after{
+    display: none;
+  }
+  
 }

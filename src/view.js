@@ -7,155 +7,157 @@ const filters = document.getElementById("filters");
 const filterArea = document.querySelector(".filterArea");
 
 export default class View {
-  static page = 1;
-  static setCommand(command) {
-    this.command = command;
-    return this;
-  }
-  static async setJobs() {
-    const jobs = await this.command();
+	static page = 1;
+	static setCommand(command) {
+		this.command = command;
+		return this;
+	}
+	static async setJobs() {
+		this.page = 1;
+		const jobs = await this.command();
 
-    const jobsTemplate = jobComponent(jobs);
+		const jobsTemplate = jobComponent(jobs);
 
-    View._insertJobsInMain(jobsTemplate);
+		View._insertJobsInMain(jobsTemplate);
 
-    View.addEventFromTecnologys();
-  }
+		View.addEventFromTecnologys();
+	}
 
-  static _insertJobsInMain(jobs) {
-    main.innerHTML = jobs;
-  }
+	static _insertJobsInMain(jobs) {
+		main.innerHTML = jobs;
+	}
 
-  static _insertMoreJobsInMain(jobs) {
-    main.innerHTML += jobs;
-  }
+	static _insertMoreJobsInMain(jobs) {
+		main.innerHTML += jobs;
+	}
 
-  static addEventFromBtnReadMore() {
-    btnReadMore.addEventListener("click", () => View._eventFromBtnReadMore());
-  }
+	static addEventFromBtnReadMore() {
+		btnReadMore.addEventListener("click", () => View._eventFromBtnReadMore());
+	}
 
-  static async _eventFromBtnReadMore() {
-    this.page += 1;
+	static async _eventFromBtnReadMore() {
+		this.page += 1;
 
-    const moreJobs = await this.command(this.page);
-    const jobsTemplate = jobComponent(moreJobs);
-    View._insertMoreJobsInMain(jobsTemplate);
-  }
+		const moreJobs = await this.command(this.page);
+		const jobsTemplate = jobComponent(moreJobs);
+		View._insertMoreJobsInMain(jobsTemplate);
+		View.addEventFromTecnologys();
+	}
 
-  static _getElementByClass(className) {
-    const element = document.querySelectorAll(className);
-    return element;
-  }
+	static _getElementByClass(className) {
+		const element = document.querySelectorAll(className);
+		return element;
+	}
 
-  static _getElementById(id) {
-    const element = document.getElementById(id);
-    return element;
-  }
+	static _getElementById(id) {
+		const element = document.getElementById(id);
+		return element;
+	}
 
-  static _addFilter(e) {
-    const tecnologyName = e.currentTarget.textContent;
+	static _addFilter(e) {
+		const tecnologyName = e.currentTarget.textContent;
 
-    const element = View._getElementById(tecnologyName);
+		const element = View._getElementById(tecnologyName);
 
-    if (element) throw new Error("element has exist");
-    View._addTecnologyFromParameter(tecnologyName);
-    View._addTecnologyFromFilterTable(tecnologyName);
-  }
-  static _addTecnologyFromFilterTable(tecnologyName) {
-    const tecnologyTemplate = tecnologyComponent(tecnologyName);
-    if (filters.lastElementChild === null) filterArea.classList.add("active");
+		if (element) throw new Error("element has exist");
+		View._addTecnologyFromParameter(tecnologyName);
+		View._addTecnologyFromFilterTable(tecnologyName);
+	}
+	static _addTecnologyFromFilterTable(tecnologyName) {
+		const tecnologyTemplate = tecnologyComponent(tecnologyName);
+		if (filters.lastElementChild === null) filterArea.classList.add("active");
 
-    filters.innerHTML += tecnologyTemplate;
+		filters.innerHTML += tecnologyTemplate;
 
-    // View.addEventFromBtnFilter(tecnologyName);
-  }
+		// View.addEventFromBtnFilter(tecnologyName);
+	}
 
-  static _addTecnologyFromParameter(tecnologyName) {
-    const url = new URL(location);
+	static _addTecnologyFromParameter(tecnologyName) {
+		const url = new URL(location);
 
-    const params = new URLSearchParams(url.search);
-    console.log(tecnologyName.replace(/\s/g, ""));
-    params.has("tecnologys")
-      ? params.set(
-          "tecnologys",
-          `${params.getAll("tecnologys")}&${tecnologyName.replace(/\s/g, "")}`
-        )
-      : params.set("tecnologys", tecnologyName.replace(/\s/g, ""));
+		const params = new URLSearchParams(url.search);
+		console.log(tecnologyName.replace(/\s/g, ""));
+		params.has("tecnologys")
+			? params.set(
+					"tecnologys",
+					`${params.getAll("tecnologys")}&${tecnologyName.replace(/\s/g, "")}`
+			  )
+			: params.set("tecnologys", tecnologyName.replace(/\s/g, ""));
 
-    window.history.replaceState({}, ",", `${location.pathname}?${params}`);
-  }
+		window.history.replaceState({}, ",", `${location.pathname}?${params}`);
+	}
 
-  static setParametersUrlInFilterTable() {
-    const url = new URL(location);
+	static setParametersUrlInFilterTable() {
+		const url = new URL(location);
 
-    const params = new URLSearchParams(url.search);
+		const params = new URLSearchParams(url.search);
 
-    const [parameters] = params.getAll("tecnologys");
-    const newParameters = parameters?.split("&");
+		const [parameters] = params.getAll("tecnologys");
+		const newParameters = parameters?.split("&");
 
-    newParameters?.map((tecnologyName) => {
-      View._addTecnologyFromFilterTable(tecnologyName);
-    });
-  }
-  static _proxyRemoveAndAddFilter(addOrRemove, e) {
-    addOrRemove
-      ? (async () => {
-          try {
-            View._addFilter(e);
-            View.setJobs();
-          } catch (err) {
-            return;
-          }
-        })()
-      : (async () => {
-          View._removeFilter(e);
-          View.setJobs();
-        })();
-  }
+		newParameters?.map((tecnologyName) => {
+			View._addTecnologyFromFilterTable(tecnologyName);
+		});
+	}
+	static _proxyRemoveAndAddFilter(addOrRemove, e) {
+		addOrRemove
+			? (async () => {
+					try {
+						View._addFilter(e);
+						View.setJobs();
+					} catch (err) {
+						return;
+					}
+			  })()
+			: (async () => {
+					View._removeFilter(e);
+					View.setJobs();
+			  })();
+	}
 
-  static addEventFromFilterArea() {
-    filterArea.addEventListener("click", (e) => {
-      const element = e.target;
-      if (element.className == "clear-filter") {
-        View._proxyRemoveAndAddFilter(false, e);
-      } else {
-        return;
-      }
-    });
-  }
+	static addEventFromFilterArea() {
+		filterArea.addEventListener("click", (e) => {
+			const element = e.target;
+			if (element.className == "clear-filter") {
+				View._proxyRemoveAndAddFilter(false, e);
+			} else {
+				return;
+			}
+		});
+	}
 
-  static addEventFromTecnologys() {
-    const elements = View._getElementByClass(".tecnology");
+	static addEventFromTecnologys() {
+		const elements = View._getElementByClass(".tecnology");
 
-    elements.forEach((element) => {
-      element.addEventListener("click", (e) =>
-        View._proxyRemoveAndAddFilter(true, e)
-      );
-    });
-  }
+		elements.forEach((element) => {
+			element.addEventListener("click", (e) =>
+				View._proxyRemoveAndAddFilter(true, e)
+			);
+		});
+	}
 
-  static _removeFilter(e) {
-    const url = new URL(location);
+	static _removeFilter(e) {
+		const url = new URL(location);
 
-    const params = new URLSearchParams(url.search);
-    if (params.has("tecnologys")) {
-      const tecnologys = params
-        .getAll("tecnologys")[0]
-        .split("&")
-        .filter(
-          (element) => e.target.parentElement.id.replace(/\s/g, "") != element
-        );
+		const params = new URLSearchParams(url.search);
+		if (params.has("tecnologys")) {
+			const tecnologys = params
+				.getAll("tecnologys")[0]
+				.split("&")
+				.filter(
+					(element) => e.target.parentElement.id.replace(/\s/g, "") != element
+				);
 
-      params.set("tecnologys", tecnologys.join("&"));
-      window.history.replaceState({}, ",", `${location.pathname}?${params}`);
+			params.set("tecnologys", tecnologys.join("&"));
+			window.history.replaceState({}, ",", `${location.pathname}?${params}`);
 
-      filters.removeChild(e.target.parentElement);
+			filters.removeChild(e.target.parentElement);
 
-      if (filters.lastElementChild === null) {
-        params.delete("tecnologys");
-        window.history.replaceState({}, ",", `${location.pathname}?${params}`);
-        filterArea.classList.remove("active");
-      }
-    }
-  }
+			if (filters.lastElementChild === null) {
+				params.delete("tecnologys");
+				window.history.replaceState({}, ",", `${location.pathname}?${params}`);
+				filterArea.classList.remove("active");
+			}
+		}
+	}
 }

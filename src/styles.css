@@ -36,7 +36,7 @@ header {
   display: none;
   align-items: center;
   justify-content: space-between;
-  margin: -35px auto 60px auto;
+  margin: -35px auto 0px auto;
   background-color: white;
   padding: 10px;
   border-radius: 8px;
@@ -109,8 +109,8 @@ main {
   background-color: (var(--filter-table-color));
 }
 
-main .component-job:not(:first-child) {
-  margin-top: 50px;
+main .component-job {
+  margin-top: 100px;
 }
 main .component-job {
   width: 90%;

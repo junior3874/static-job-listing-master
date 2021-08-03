@@ -6,8 +6,11 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Spartan:wght@500;700&display=swap" rel="stylesheet"> 
+ 
   <link rel="icon" type="image/png" sizes="32x32" href="./images/favicon-32x32.png">
   <link rel="stylesheet" href="./styles.css">
+
+  <link rel="stylesheet" href="firstVisit.css">
   <title>Frontend Mentor | Job Listings</title>
 
   <!-- Feel free to remove these styles or customise in your own stylesheet 👍 -->
@@ -28,7 +31,57 @@
     </button>
   </section>
   <main>
- 
+    <div id="${job.id}"class="component-job ${
+      job.new && job.featured ? "active" : ""
+    }" >
+    <div class="job-props">
+      <section class="company-image">
+        <img src="./images/insure.svg">
+      </section>
+      
+      <div class="job-details">
+        <div class="company-props">
+          <p class="company-name">
+            Extra
+          </p>
+        
+              <span id="new">
+          new!
+        </span>
+
+
+           <span id="featured">
+        featured
+      </span>
+          
+          
+
+          
+        </div>
+        <div class="job-name-area">
+          <p id="job-name">Entregador</p>
+        </div>
+        <div class="job-especifications">
+          <p id="date-post">
+            1 ago
+          </p>
+          <p id="job-type">
+            full home
+          </p>
+          <p id="job-location">
+            USA only
+          </p>
+        </div>
+      </div>
+
+    </div>
+    <div class="job-tecnologys">
+    <span class="tecnology">HTML</span>
+    <span class="tecnology">CSS</span>
+    <span class="tecnology">JS</span>
+        
+    </div>
+</div>
   </main>
 
   <section class="pagination">
@@ -37,9 +90,6 @@
     </p>
   </section>
 
-
-
-  
   <div class="attribution">
     Challenge by <a href="https://www.frontendmentor.io?ref=challenge" target="_blank">Frontend Mentor</a>. 
     Coded by <a href="#">Well</a>.

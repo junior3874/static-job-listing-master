@@ -13,6 +13,10 @@ export default class Controller {
   }
 
   async _setupViewEvents() {
+    const verify = await this.view.verifyUserAlreadyLogged(() =>
+      this._initialize()
+    );
+    if (!verify) return;
     await this.view.setCommand(this.getJobs());
     await this.view.setJobs(this.getJobs());
 

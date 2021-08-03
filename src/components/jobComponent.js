@@ -2,6 +2,7 @@ export default function jobComponent(jobs) {
   const jobsIn = jobs.map((job) => {
     const jobTecnologys = [...job.languages, ...job.tools, job.role].map(
       (tecnology) => `<span class="tecnology">
+     
     ${tecnology}
    </span> `
     );
@@ -59,7 +60,7 @@ export default function jobComponent(jobs) {
     </div>
     <div class="job-tecnologys">
     ${jobTecnologys.join("")}
- 
+        
     </div>
 </div>`;
   });

@@ -229,6 +229,9 @@ main .component-job .job-tecnologys {
   display: flex;
   flex-wrap: wrap;
 }
+main .component-job .job-tecnologys .tecnology {
+  position: relative;
+}
 
 main .component-job .job-tecnologys span {
   font-size: 13px;
@@ -265,25 +268,23 @@ main .component-job .job-tecnologys span {
   main .component-job {
     flex-direction: row;
   }
-  
-  main .component-job .job-props .company-image{
+
+  main .component-job .job-props .company-image {
     margin: 0 20px 0 0;
   }
 
-  main .component-job .job-props{
+  main .component-job .job-props {
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    
   }
-  
-  main .component-job .job-tecnologys{
+
+  main .component-job .job-tecnologys {
     align-items: center;
     justify-content: flex-end;
   }
 
-  main .component-job .job-props .job-details .job-especifications::after{
+  main .component-job .job-props .job-details .job-especifications::after {
     display: none;
   }
-  
 }
